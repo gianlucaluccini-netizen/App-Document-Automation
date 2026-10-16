@@ -42,6 +42,8 @@ DOCUMENTI_PER_CATEGORIA = {
         "Lettera di Intenti Assunzione (+ Penale 10% RAL)",
         "Proroga Tempo Determinato",
         "Cambio Mansione",
+        "Passaggio Livello e Diaria",
+        "Cambio Diaria",
         "Trasformazione da Temp. Det. a Indeterminato",
         "Patto di Stabilità (Durata Minima)"
     ],
@@ -54,12 +56,14 @@ DOCUMENTI_PER_CATEGORIA = {
     ]
 }
 
-TEMPLATE_MAP = {
+TEMPLATE_BASE_MAP = {
     "Assunzione Tempo Indeterminato": "assunzione_indeterminato.docx",
     "Assunzione Tempo Determinato": "assunzione_determinato.docx",
-    "Lettera di Intenti Assunzione (+ Penale 10% RAL)": "lettera_intenti_assunzione.docx",
+    "Lettera di Intenti Assunzione (+ Penale 10% RAL)": "lettera_intenti_determinato.docx",
     "Proroga Tempo Determinato": "proroga_determinato.docx",
     "Cambio Mansione": "cambio_mansione.docx",
+    "Passaggio Livello e Diaria": "passaggio_livello_diaria.docx",
+    "Cambio Diaria": "cambio_diaria.docx",
     "Trasformazione da Temp. Det. a Indeterminato": "trasformazione_indeterminato.docx",
     "Patto di Stabilità (Durata Minima)": "patto_stabilita.docx",
     "Contratto Co.Co.Co. (ex art. 409 c.p.c. / D.Lgs. 81/2015)": "contratto_cococo.docx",
@@ -207,12 +211,13 @@ if btn_genera:
             "ALLEGATO_DLGS_104": allegato_dlgs_104
         }
 
-        template_filename = TEMPLATE_MAP.get(documento_scelto)
-        template_path = template_filename if template_filename else None
+        prefisso_azienda = "HQE_" if "HQ" in azienda_scelta else "QTECH_"
+        file_base = TEMPLATE_BASE_MAP.get(documento_scelto)
+        template_filename = os.path.join("templates", f"{prefisso_azienda}{file_base}") if file_base else None
 
-        if template_path and os.path.exists(template_path):
+        if template_filename and os.path.exists(template_filename):
             try:
-                doc = DocxTemplate(template_path)
+                doc = DocxTemplate(template_filename)
                 doc.render(context)
 
                 file_stream = io.BytesIO()
@@ -234,6 +239,6 @@ if btn_genera:
                 )
 
             except Exception as e:
-                st.error(f"❌ Si è verificato un errore durante la generazione del documento: {e}")
+                st.error(f"❌ Errore durante la compilazione del documento: {e}")
         else:
-            st.warning(f"⚠️ Modello Word non trovato ({template_filename}). Assicurarsi che il file `.docx` sia stato caricato su GitHub.")
+            st.warning(f"⚠️ Modello Word non trovato nella cartella templates: `{template_filename}`.")
