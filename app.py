@@ -165,7 +165,7 @@ with st.form("form_dati_contratto"):
 
 if btn_genera:
     if not nome or not cognome or not codice_fiscale:
-        st.error("⚠️ Attenzione: Nome, Cognome e Codice Fiscale sono campi obbligatori!")
+        st.error("⚠️ Attenzione: Nome, Cognome sono campi obbligatori!")
     else:
         context = {
             "SOCIETA_NOME": dati_azienda["ragione_sociale"],
