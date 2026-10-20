@@ -113,7 +113,7 @@ with st.form("form_dati_contratto"):
         cognome = st.text_input("Cognome*", placeholder="es. Baggio")
         data_nascita = st.date_input("Data di Nascita*", datetime.date(1990, 1, 1))
     with c3:
-        codice_fiscale = st.text_input("Codice Fiscale*", placeholder="16 caratteri alfanumerici").upper()
+        codice_fiscale = st.text_input("Codice Fiscale (opzionale)", placeholder="es. PLMLGU92H24L667W").upper()
         residenza = st.text_input("Indirizzo di Residenza*", placeholder="es. Via Roma 10, Milano")
 
     st.markdown("#### ⚙️ Condizioni Operative e Inquadramento")
@@ -164,8 +164,8 @@ with st.form("form_dati_contratto"):
     btn_genera = st.form_submit_button("🚀 Genera Documento Word (.docx)")
 
 if btn_genera:
-    if not nome or not cognome or not codice_fiscale:
-        st.error("⚠️ Attenzione: Nome, Cognome sono campi obbligatori!")
+    if not nome.strip() or not cognome.strip():
+        st.error("⚠️ Attenzione: Nome e Cognome sono campi obbligatori!")
     else:
         context = {
             "SOCIETA_NOME": dati_azienda["ragione_sociale"],
@@ -182,7 +182,7 @@ if btn_genera:
             "NOME_COMPLETO": f"{nome.strip().capitalize()} {cognome.strip().upper()}",
             "LUOGO_NASCITA": luogo_nascita.strip(),
             "DATA_NASCITA": data_nascita.strftime("%d/%m/%Y"),
-            "CODICE_FISCALE": codice_fiscale.strip(),
+            "CODICE_FISCALE": codice_fiscale.strip() if codice_fiscale else "",
             "RESIDENZA": residenza.strip(),
             
             "MANSIONE": mansione.strip(),
